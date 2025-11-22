@@ -70,63 +70,55 @@ export default function Header() {
       </div>
 
       {/* Mobile Menu */}
-{isMobileMenuOpen && (
-  <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
-    <div className="px-4 py-6 space-y-4">
+      <div className={`md:hidden bg-white border-t border-gray-200 shadow-lg transition-all duration-350 ease-in-out transform ${
+        isMobileMenuOpen 
+          ? 'max-h-96 opacity-100 translate-y-0' 
+          : 'max-h-0 opacity-0 -translate-y-2 overflow-hidden'
+      }`}>
+        <div className={`px-4 py-6 space-y-4 transition-all duration-350 ease-in-out transform ${
+          isMobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
+        }`}>
+          <Link
+            to="/"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`block text-lg font-medium py-2 text-center transition-colors ${
+              location.pathname === "/" ? "text-[#2d9f8a]" : "text-gray-700"
+            }`}
+          >
+            Главная
+          </Link>
 
-      <Link
-        to="/"
-        onClick={() => setIsMobileMenuOpen(false)}
-        className={`flex items-center gap-3 text-lg font-medium py-2 transition-colors ${
-          location.pathname === "/" ? "text-[#2d9f8a]" : "text-gray-700"
-        }`}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l9-9 9 9v9a2 2 0 01-2 2h-4a2 2 0 01-2-2V12H9v9a2 2 0 01-2 2H3a2 2 0 01-2-2v-9z" />
-        </svg>
-        Главная
-      </Link>
+          <Link
+            to="/calculator"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`block text-lg font-medium py-2 text-center transition-colors ${
+              location.pathname === "/calculator" ? "text-[#2d9f8a]" : "text-gray-700"
+            }`}
+          >
+            Калькулятор
+          </Link>
 
-      <Link
-        to="/calculator"
-        onClick={() => setIsMobileMenuOpen(false)}
-        className={`flex items-center gap-3 text-lg font-medium py-2 transition-colors ${
-          location.pathname === "/calculator" ? "text-[#2d9f8a]" : "text-gray-700"
-        }`}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M16 2H8a2 2 0 00-2 2v16l6-4 6 4V4a2 2 0 00-2-2z" />
-        </svg>
-        Калькулятор
-      </Link>
+          <Link
+            to="/check"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={`block text-lg font-medium py-2 text-center transition-colors ${
+              location.pathname === "/check" ? "text-[#2d9f8a]" : "text-gray-700"
+            }`}
+          >
+            Мои рассрочки
+          </Link>
 
-      <Link
-        to="/check"
-        onClick={() => setIsMobileMenuOpen(false)}
-        className={`flex items-center gap-3 text-lg font-medium py-2 transition-colors ${
-          location.pathname === "/check" ? "text-[#2d9f8a]" : "text-gray-700"
-        }`}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 6H7a2 2 0 01-2-2V4a2 2 0 012-2h6l6 6v14a2 2 0 01-2 2z" />
-        </svg>
-        Мои рассрочки
-      </Link>
-
-      <div className="pt-4 border-t border-gray-200">
-        <Link
-          to="/calculator"
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="block w-full bg-gradient-to-r from-[#043c6f] to-[#5bc5a7] text-white px-6 py-3 rounded-full font-semibold text-center"
-        >
-          Рассчитать рассрочку
-        </Link>
+          <div className="pt-4 border-t border-gray-200">
+            <Link
+              to="/calculator"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full bg-gradient-to-r from-[#043c6f] to-[#5bc5a7] text-white px-6 py-3 rounded-full font-semibold text-center"
+            >
+              Рассчитать рассрочку
+            </Link>
+          </div>
+        </div>
       </div>
-
-    </div>
-  </div>
-)}
-
     </header>
   );
 }

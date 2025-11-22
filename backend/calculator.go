@@ -59,15 +59,15 @@ func compute(req CalcRequest) (CalcResponse, error) {
 	rawMonthly := financed / float64(req.Term)
 	monthlyRounded := roundTo50(rawMonthly)
 
-	totalRounded := monthlyRounded*float64(req.Term) + roundTo50(downPayment)
+	totalRounded := monthlyRounded*float64(req.Term) + downPayment
 	totalMarkupRounded := totalRounded - req.Price
 
 	return CalcResponse{
 		EffectiveRate:  tradeMarkupPercent,
 		MonthlyPayment: monthlyRounded,
 		Total:          totalRounded,
-		TotalMarkup:    roundTo50(totalMarkupRounded),
-		DownPayment:    roundTo50(downPayment),
+		TotalMarkup:    totalMarkupRounded,
+		DownPayment:    downPayment,
 	}, nil
 }
 

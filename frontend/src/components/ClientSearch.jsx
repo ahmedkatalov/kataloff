@@ -75,13 +75,13 @@ export default function ClientSearch() {
   const getStatusStyle = (status) => {
     const s = status.toLowerCase().trim();
 
-    if (s.includes("оплач")) return "bg-green-100 text-green-700 border border-green-300";
-    if (s.includes("просроч")) return "bg-red-100 text-red-700 border border-red-300";
-    if (s.includes("к оплате")) return "bg-orange-100 text-orange-700 border border-orange-300";
+    if (s.includes("оплач")) return "bg-green-50 text-green-500 border border-green-300";
+    if (s.includes("просроч")) return "bg-red-50 text-red-400 border border-red-300";
+    if (s.includes("к оплате")) return "bg-orange-50 text-orange-400 border border-orange-300";
     if (s.includes("предстоящ") || s.includes("текущ"))
-      return "bg-blue-100 text-blue-700 border border-blue-300";
+      return "bg-blue-50 text-blue-400 border border-blue-300";
 
-    return "bg-gray-100 text-gray-600 border border-gray-300";
+    return "bg-gray-50 text-gray-400 border border-gray-300";
   };
 
   const capitalizeFirst = (str) =>
@@ -104,6 +104,40 @@ export default function ClientSearch() {
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("ru-RU").format(amount) + " ₽";
+  };
+
+  // === РАСЧЕТ СТАТУСА РАССРОЧКИ ===
+  const getInstallmentStatus = (installment) => {
+    if (!installment.payments || installment.payments.length === 0) {
+      return installment.payment_status; // fallback to backend status
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+    
+    // Check if all payments are paid
+    const allPaid = installment.payments.every(payment => payment.is_paid);
+    if (allPaid) {
+      return "Оплачено";
+    }
+
+    // Check for overdue payments
+    const hasOverdue = installment.payments.some(payment => 
+      !payment.is_paid && new Date(payment.due_date) < new Date(today)
+    );
+    if (hasOverdue) {
+      return "Просрочено";
+    }
+
+    // Check for payments due today
+    const hasDueToday = installment.payments.some(payment =>
+      !payment.is_paid && new Date(payment.due_date).toDateString() === new Date(today).toDateString()
+    );
+    if (hasDueToday) {
+      return "К оплате";
+    }
+
+    // Otherwise it's upcoming
+    return "Предстоящий";
   };
 
   return (
@@ -270,11 +304,11 @@ export default function ClientSearch() {
                     </div>
 
                     <span
-                      className={`px-3 py-1.5 rounded-lg text-xs font-normal w-28 text-center ${getStatusStyle(
-                        inst.payment_status
+                      className={`px-3 py-1.5 rounded-full text-xs font-normal w-28 text-center ${getStatusStyle(
+                        getInstallmentStatus(inst)
                       )}`}
                     >
-                      {capitalizeFirst(inst.payment_status)}
+                      {capitalizeFirst(getInstallmentStatus(inst))}
                     </span>
 
                     <div className="text-[#2d9f8a]">
@@ -315,11 +349,11 @@ export default function ClientSearch() {
 
                     <div className="flex items-center gap-2">
                       <span
-                        className={`px-2 py-1 rounded-lg text-xs font-normal ${getStatusStyle(
-                          inst.payment_status
+                        className={`px-2.5 py-1 rounded-full text-xs font-normal ${getStatusStyle(
+                          getInstallmentStatus(inst)
                         )}`}
                       >
-                        {capitalizeFirst(inst.payment_status)}
+                        {capitalizeFirst(getInstallmentStatus(inst))}
                       </span>
 
                       <svg
@@ -435,7 +469,7 @@ export default function ClientSearch() {
                               </div>
 
                               <span
-                                className={`px-3 py-1.5 rounded-lg text-xs font-normal w-28 text-center ${getStatusStyle(
+                                className={`px-3 py-1.5 rounded-full text-xs font-normal w-28 text-center ${getStatusStyle(
                                   status
                                 )}`}
                               >
@@ -484,7 +518,7 @@ export default function ClientSearch() {
                               </div>
 
                               <span
-                                className={`px-2 py-1 rounded-lg text-xs font-normal ${getStatusStyle(
+                                className={`px-2.5 py-1 rounded-full text-xs font-normal ${getStatusStyle(
                                   status
                                 )}`}
                               >
